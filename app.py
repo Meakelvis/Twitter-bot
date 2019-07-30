@@ -1,4 +1,7 @@
 from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.keys import Keys
 import time
 
@@ -7,20 +10,24 @@ class TwitterBot:
     def __init__(self, username, password):
         self.username = username
         self.password = password
-        self.bot = webdriver.Firefox()
+        self.bot = webdriver.Chrome()
 
     def login(self):
         bot = self.bot
         bot.get('https://twitter.com/login')
-        time.sleep(3)
-        email = bot.find_element_by_name('session[username_or_email]')
-        password = bot.find_element_by_name('session[password]')
-        email.clear()
-        password.clear()
-        email.send_keys(self.username)
-        password.send_keys(self.password)
-        password.send_keys(Keys.RETURN)
-        time.sleep(3)
+        try:
+            email = WebDriverWait(bot, 30).until(
+                EC.presence_of_element_located((By.NAME, 'session[username_or_email]')))
+            password = WebDriverWait(bot, 30).until(
+                EC.presence_of_element_located((By.NAME, 'session[password]')))
+            email.clear()
+            password.clear()
+            email.send_keys(self.username)
+            password.send_keys(self.password)
+            password.send_keys(Keys.RETURN)
+            time.sleep(10)
+        finally:
+            bot.quit()
 
     def like_tweet(self, hashtag):
         bot = self.bot
@@ -45,5 +52,5 @@ class TwitterBot:
                     time.sleep(60)
 
 
-ed = TwitterBot()
+ed = TwitterBot('elviskamweya@gmail.com', 'misharnold41')
 ed.login()
