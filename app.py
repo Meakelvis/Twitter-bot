@@ -52,5 +52,5 @@ class TwitterBot:
                     time.sleep(60)
 
 
-ed = TwitterBot('elviskamweya@gmail.com', 'misharnold41')
+ed = TwitterBot('', '')
 ed.login()
